@@ -29,13 +29,10 @@ class Client(object):
         response = self.client.get(self.endpoint_live, params={'source': base_currency})
         return response.json(parse_int=decimal.Decimal, parse_float=decimal.Decimal)
 
-    def live_rates_for(self, currencies, base_currency=base_currency):
-        currencies = ','.join(currencies)
-        response = self.client.get(self.endpoint_live, params={'currencies': currencies, 'source': base_currency})
-        return response.json(parse_int=decimal.Decimal, parse_float=decimal.Decimal)
-
-    def historical(self, date=datetime.date.today(), base_currency=base_currency):
-        response = self.client.get(self.endpoint_historical, params={'date': date, 'source': base_currency})
+    def historical(self, date=datetime.date.today(), base_currency=base_currency, currencies=''):
+        if isinstance(currencies, list):
+            currencies = ','.join(currencies)
+        response = self.client.get(self.endpoint_historical, params={'date': date, 'source': base_currency, 'currencies': currencies})
         return response.json(parse_int=decimal.Decimal, parse_float=decimal.Decimal)
 
     def convert(self, from_currency, to_currency, amount, date=datetime.date.today()):
